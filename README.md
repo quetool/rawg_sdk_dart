@@ -1,6 +1,6 @@
 # rawg_sdk_dart
 
-A new Flutter package project.
+This is RAWG Dart SDK. This library contains methods for interacting with [RAWG API](https://rawg.io/apidocs)
 
 ## Getting Started
 
