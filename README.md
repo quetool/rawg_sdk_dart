@@ -1,6 +1,6 @@
 # rawg_sdk_dart
 
-This is RAWG Dart SDK. This library contains methods for interacting with [RAWG API](https://rawg.io/apidocs)
+This is RAWG Dart SDK (currently under development). This library contains methods for interacting with [RAWG API](https://rawg.io/apidocs)
 
 ## Getting Started
 
