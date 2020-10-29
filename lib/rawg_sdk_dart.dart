@@ -3,34 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'models/game.dart';
-
-class GamesOptions {
-  final sitemap = '/sitemap';
-  final additions = '/additions';
-  final developmentTeam = '/development-team';
-  final gameSeries = '/game-series';
-  final parentGames = '/parent-games';
-  final screenShots = '/screenshots';
-  final stores = '/stores';
-  final achievements = '/achievements';
-  final movies = '/movies';
-  final reddit = '/reddit';
-  final suggested = '/suggested';
-  final twitch = '/twitch';
-  final youtube = '/youtube';
-}
-
-///
-/// You can reverse the sort order adding a hyphen, for example: -released.
-///
-enum Ordering {
-  name,
-  released,
-  added,
-  created,
-  rating,
-}
+import 'core/enums.dart';
+import 'core/game.dart';
 
 class RawgApiClient {
   factory RawgApiClient({String apiKey = ''}) {
@@ -47,7 +21,6 @@ class RawgApiClient {
   String _creators;
   String _developers;
   String _games;
-  GamesOptions _gamesOptions;
   String _genres;
   String _platforms;
   String _platformsListsParents;
@@ -63,7 +36,6 @@ class RawgApiClient {
     _creators = '/creators';
     _developers = '/developers';
     _games = '/games';
-    _gamesOptions = GamesOptions();
     _genres = '/genres';
     _platforms = '/platforms';
     _platformsListsParents = '/platforms/lists/parents';
@@ -74,21 +46,19 @@ class RawgApiClient {
   }
 
   ///
-  /// You can make your own url and use this function to request
+  /// You can make your own url and use this function to request it
   /// An example could be the next_url response on getGames() function or an option for /games endopoint like /games/{game_pk}/parent-games
   /// You will need to cast the map list object as you needed
   ///
   void requestCustomUrl(
     String url,
-    Function(String error, String nextUrl, List<Map<String, dynamic>> objects)
-        completion,
+    Function(String error, String nextUrl, List<dynamic> objects) completion,
   ) {
     _client.get(url).then((response) {
       if (response.statusCode == 200) {
         try {
           var jsonObject = json.decode(response.body) as Map<String, dynamic>;
-          var objectsList =
-              (jsonObject['results'] as List<Map<String, dynamic>>);
+          var objectsList = (jsonObject['results'] as List<dynamic>);
           completion(null, (jsonObject['next'] as String), objectsList);
         } catch (e) {
           completion(e.toString(), null, null);
@@ -97,6 +67,20 @@ class RawgApiClient {
         completion(response.body, null, null);
       }
     });
+  }
+
+  ///
+  /// get top ten games of all time
+  ///
+  void getTopTenGamesAllTime({
+    @required Function(String error, List<Game> games) completion,
+  }) {
+    getGames(
+        pageSize: '10',
+        moreParams: {'ordering': '-${OrderingOptions.RATING.value}'},
+        completion: (String error, String nextUrl, List<Game> games) {
+          completion(error, games);
+        });
   }
 
   ///
@@ -140,13 +124,69 @@ class RawgApiClient {
   }
 
   ///
+  /// Get details of the game.
+  /// https://api.rawg.io/docs/#operation/games_read
+  ///
+  void getGameDetails(
+      String gameID, Function(String error, Game gameDetails) completion) {
+    var params = <String, String>{};
+    if (_apiKey != '') params['key'] = _apiKey;
+
+    var uri = Uri.https(_rootApi, '/api$_games/$gameID', params);
+    print(uri.toString());
+    _client.get(uri).then((response) {
+      if (response.statusCode == 200) {
+        try {
+          var jsonObject = json.decode(response.body) as Map<String, dynamic>;
+          var game = Game.fromJson(jsonObject);
+          completion(null, game);
+        } catch (e) {
+          completion(e.toString(), null);
+        }
+      } else {
+        completion(response.body, null);
+      }
+    });
+  }
+
+  ///
+  /// Get screenshots for the game.
+  /// https://api.rawg.io/docs/#operation/games_screenshots_list
+  ///
+  void getGameScreenshots(String slug,
+      Function(String error, List<Screenshot> screenshots) completion) {
+    var params = <String, String>{};
+    if (_apiKey != '') params['key'] = _apiKey;
+
+    var uri = Uri.https(_rootApi,
+        '/api$_games/$slug/${GamesEndpoints.SCREEN_SHOTS.value}', params);
+    print(uri.toString());
+    _client.get(uri).then((response) {
+      if (response.statusCode == 200) {
+        try {
+          var jsonObject = json.decode(response.body) as Map<String, dynamic>;
+          var screenshotsList = (jsonObject['results'] as List)
+              .map((dynamic screenshot) =>
+                  Screenshot.fromJson(screenshot as Map<String, dynamic>))
+              .toList();
+          completion(null, screenshotsList);
+        } catch (e) {
+          completion(e.toString(), null);
+        }
+      } else {
+        completion(response.body, null);
+      }
+    });
+  }
+
+  ///
   /// Get a list of video game platforms.
   /// https://api.rawg.io/docs/#tag/platforms
   ///
   void getPlatforms({
     String page = '1',
     String pageSize = '20',
-    Ordering ordering = Ordering.name,
+    OrderingOptions ordering = OrderingOptions.NAME,
     @required
         Function(String error, String nextUrl, List<Platform> platforms)
             completion,
@@ -155,7 +195,7 @@ class RawgApiClient {
     if (_apiKey != '') params['key'] = _apiKey;
     params['page'] = page;
     params['page_size'] = pageSize;
-    params['ordering'] = ordering.toString();
+    params['ordering'] = ordering.value;
     var uri = Uri.https(_rootApi, '/api$_platforms', params);
     print(uri.toString());
     _client.get(uri).then((response) {
@@ -183,7 +223,7 @@ class RawgApiClient {
   void getGenres({
     String page = '1',
     String pageSize = '20',
-    Ordering ordering = Ordering.name,
+    OrderingOptions ordering = OrderingOptions.NAME,
     @required
         Function(String error, String nextUrl, List<Genres> genres) completion,
   }) {
@@ -191,7 +231,7 @@ class RawgApiClient {
     if (_apiKey != '') params['key'] = _apiKey;
     params['page'] = page;
     params['page_size'] = pageSize;
-    params['ordering'] = ordering.toString();
+    params['ordering'] = ordering.value;
     var uri = Uri.https(_rootApi, '/api$_genres', params);
     print(uri.toString());
     _client.get(uri).then((response) {
@@ -219,7 +259,7 @@ class RawgApiClient {
   void getStores({
     String page = '1',
     String pageSize = '20',
-    Ordering ordering = Ordering.name,
+    OrderingOptions ordering = OrderingOptions.NAME,
     @required
         Function(String error, String nextUrl, List<Store> stores) completion,
   }) {
@@ -227,7 +267,7 @@ class RawgApiClient {
     if (_apiKey != '') params['key'] = _apiKey;
     params['page'] = page;
     params['page_size'] = pageSize;
-    params['ordering'] = ordering.toString();
+    params['ordering'] = ordering.value;
     var uri = Uri.https(_rootApi, '/api$_stores', params);
     print(uri.toString());
     _client.get(uri).then((response) {

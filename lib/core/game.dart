@@ -71,7 +71,7 @@ class Game {
   double rating;
   int id;
   List<Genres> genres;
-  List<ShortScreenshots> shortScreenshots;
+  List<dynamic> shortScreenshots;
   int price;
   List<Stores> stores;
   int ratingTop;
@@ -379,6 +379,34 @@ class Tags {
     data['language'] = language;
     data['games_count'] = gamesCount;
     data['image_background'] = imageBackground;
+    return data;
+  }
+}
+
+class Screenshot {
+  int id;
+  String image;
+  int width;
+  int height;
+  bool isDeleted;
+
+  Screenshot({this.id, this.image, this.width, this.height, this.isDeleted});
+
+  Screenshot.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    image = json['image'];
+    width = json['width'];
+    height = json['height'];
+    isDeleted = json['is_deleted'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['image'] = this.image;
+    data['width'] = this.width;
+    data['height'] = this.height;
+    data['is_deleted'] = this.isDeleted;
     return data;
   }
 }
