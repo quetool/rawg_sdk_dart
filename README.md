@@ -1,25 +1,26 @@
 # rawg_sdk_dart
 
-This is RAWG Dart SDK (currently under development). 
+This is a very simply RAWG Dart SDK (currently under development). 
 
-This library contains methods for interacting with [RAWG API](https://rawg.io/apidocs)
+It contains methods for interacting with [RAWG API](https://rawg.io/apidocs)
 
 ## Getting Started
 
 ### Installation
-Just add to your pubspec dependencies the following
+For now you can add to your pubspec dependencies the following repository like this
 
 ```
   rawg_sdk_dart:
     git: https://github.com/quetool/rawg_sdk_dart
 ```
 
+_I will be adding this packed to the pub.dev directory soon_ 🤞
+
 ### How to use
-You need to create a RawgApiClient() instance, which is a singleton and then call it functions
+You need to create a RawgApiClient() instance, which is a singleton and then call it functions. You can add an ApiKey if you want, you can check how to get an ApiKey here [https://rawg.io/apidocs](https://rawg.io/apidocs)
 
 ```
 var rawg = RawgApiClient();
-
 ```
 
 ### A few examples:
@@ -54,6 +55,49 @@ rawg.getGames(moreParams: {'search': 'cyberpunk'}, completion: (error, nextUrl, 
 	//
 });
 ```
+You can also ordering results by adding the parameter to the request
+
+```
+moreParams: {'ordering': '${OrderingOptions.RATING.value}'},
+```
+Or in reverse order (add - (minus) to the order string)
+
+```
+moreParams: {'ordering': '-${OrderingOptions.RATING.value}'},
+```
+
+I facilitated an enum you can use to ordering purposes
+
+```
+enum OrderingOptions {
+  NAME,
+  RELEASED,
+  ADDED,
+  CREATED,
+  RATING,
+}
+
+extension OrderingOptionsExtension on OrderingOptions {
+  String get value {
+    switch (this) {
+      case OrderingOptions.NAME:
+        return "name";
+      case OrderingOptions.RELEASED:
+        return "released";
+      case OrderingOptions.ADDED:
+        return "added";
+      case OrderingOptions.CREATED:
+        return "created";
+      case OrderingOptions.RATING:
+        return "rating";
+      default:
+        return null;
+    }
+  }
+}
+```
+
+### More examples:
 
 Get Game Details:
 
