@@ -18,31 +18,31 @@ extension GamesEndpointsExtension on GamesEndpoints {
   String get value {
     switch (this) {
       case GamesEndpoints.SITEMAP:
-        return "/sitemap";
+        return "sitemap";
       case GamesEndpoints.ADDITIONS:
-        return "/additions";
+        return "additions";
       case GamesEndpoints.DEVELOPMENT_TEAM:
-        return "/development-team";
+        return "development-team";
       case GamesEndpoints.GAME_SERIES:
-        return "/game-series";
+        return "game-series";
       case GamesEndpoints.PARENT_GAMES:
-        return "/parent-games";
+        return "parent-games";
       case GamesEndpoints.SCREEN_SHOTS:
-        return "/screenshots";
+        return "screenshots";
       case GamesEndpoints.STORES:
-        return "/stores";
+        return "stores";
       case GamesEndpoints.ACHIEVEMENTS:
-        return "/achievements";
+        return "achievements";
       case GamesEndpoints.MOVIES:
-        return "/movies";
+        return "movies";
       case GamesEndpoints.REDDIT:
-        return "/reddit";
+        return "reddit";
       case GamesEndpoints.SUGGESTED:
-        return "/suggested";
+        return "suggested";
       case GamesEndpoints.TWITCH:
-        return "/twitch";
+        return "twitch";
       case GamesEndpoints.YOUTUBE:
-        return "/youtube";
+        return "youtube";
       default:
         return null;
     }
