@@ -14,7 +14,7 @@ For now you can add to your pubspec dependencies the following repository like t
     git: https://github.com/quetool/rawg_sdk_dart
 ```
 
-_I will be adding this packed to the pub.dev directory soon_ 🤞
+_I will be adding this package to pub.dev directory soon_ 🤞
 
 ### How to use
 You need to create a RawgApiClient() instance, which is a singleton and then call it functions. You can add an ApiKey if you want, you can check how to get an ApiKey here [https://rawg.io/apidocs](https://rawg.io/apidocs)
