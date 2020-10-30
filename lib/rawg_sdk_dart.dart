@@ -52,14 +52,19 @@ class RawgApiClient {
   ///
   void requestCustomUrl(
     String url,
-    Function(String error, String nextUrl, List<dynamic> objects) completion,
+    Function(String error, String nextUrl, dynamic object) completion,
   ) {
     _client.get(url).then((response) {
       if (response.statusCode == 200) {
         try {
           var jsonObject = json.decode(response.body) as Map<String, dynamic>;
-          var objectsList = (jsonObject['results'] as List<dynamic>);
-          completion(null, (jsonObject['next'] as String), objectsList);
+          if (jsonObject.containsKey('results')) {
+            var objectsList = (jsonObject['results'] as List<dynamic>);
+            var nextUrl = jsonObject['next'] as String;
+            completion(null, nextUrl, objectsList);
+          } else {
+            completion(null, null, jsonObject);
+          }
         } catch (e) {
           completion(e.toString(), null, null);
         }

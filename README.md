@@ -103,7 +103,8 @@ Get Game Details:
 
 ```
 rawg.getGameDetails('$gameId', (error, gameDetails) {
-	//
+	print(error ?? 'NO ERROR');
+	print(gameDetails ?? 'NO DATA');
 });
 ```
 
@@ -111,18 +112,39 @@ Get Top Ten Games of all times:
 
 ```
 rawg.getTopTenGamesAllTime(completion: (error, games) {
-	//
+	print(error ?? 'NO ERROR');
+	print(games ?? 'NO DATA');
 });
 ```
 
-This package has also a function to request any url you want
+This package has also a function to request the API in any way you want by forming the URL the way you need. So if you want to, you can use just this only function in your app but you will need to cast or parse the resultant `object` because it will be dynamic.
 
 ```
-rawg.requestCustomUrl('$customUrl', (error, nextUrl, objects) {
-	//
+rawg.requestCustomUrl('$customUrl', (error, nextUrl, object) {
+	print(error ?? 'NO ERROR');
+	print(nextUrl ?? 'NO NEXT');
+	print(object ?? 'NO DATA');
 });
 ```
 
+`$customUrl` could be something like this: `https://api.rawg.io/api/games?dates=2019-01-01,2019-12-31&ordering=-added`
+
+So, if you know that `object` it will be a `List<Game>` you will need to map it like this:
+
+```
+var customUrl = 'https://api.rawg.io/api/games?dates=2019-01-01,2019-12-31&ordering=-added';
+rawg.requestCustomUrl('$customUrl', (error, nextUrl, object) {
+	if (error == null) {
+		var gamesList = object
+            .map((dynamic e) => Game.fromJson(e as Map<String, dynamic>))
+            .toList();
+	}
+});
+```
+
+`Game` it is the main object of this package. You can find it definition on `lib/core/` folder
+
+-------
 
 More documentation will be added soon...
 
