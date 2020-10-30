@@ -77,4 +77,21 @@ extension OrderingOptionsExtension on OrderingOptions {
         return null;
     }
   }
+
+  String get reverse {
+    switch (this) {
+      case OrderingOptions.NAME:
+        return "-name";
+      case OrderingOptions.RELEASED:
+        return "-released";
+      case OrderingOptions.ADDED:
+        return "-added";
+      case OrderingOptions.CREATED:
+        return "-created";
+      case OrderingOptions.RATING:
+        return "-rating";
+      default:
+        return null;
+    }
+  }
 }

@@ -22,48 +22,67 @@ You need to create a RawgApiClient() instance, which is a singleton and then cal
 ```
 var rawg = RawgApiClient();
 ```
+Or with ApiKey
+
+```
+var rawg = RawgApiClient(apiKey: 'your_api_key');
+```
 
 ### A few examples:
 Get Games:
 
 ```
 rawg.getGames(completion: (error, nextUrl, games) {
-	//
+	print(error ?? 'NO ERROR');
+	print(nextUrl ?? 'NO NEXT URL');
+	print(games ?? 'NO DATA');
 });
 ```
 
-*error* is a String with an error if required
+> ***_error_*** is a `String` with an error if required
 
-*nextUrl* is a String with the next url to paginate results if required
+> ***_nextUrl_*** is a `String` with the next url to paginate results if required
 
-*games* is a list of games
+> ***_games_*** is a `List<Game>` list of games
 
 This is the definition of getGames():
 
 ```
 void getGames({String page = '1', 
-			 String pageSize = '20', 
-			 Map<String, String> moreParams, 
-			 dynamic Function(String, String, List<Game>) completion})
+			 	 String pageSize = '20', 
+				 Map<String, String> moreParams, 
+			 	 Function(String, String, List<Game>) completion})
 ```
-So, as you can see, it has optionals parameters already setted like page and pageSize and another Map<String, String> moreParams parameter which you can use to add more parameters to the API. You can see which ones here [https://api.rawg.io/docs/#tag/games](https://api.rawg.io/docs/#tag/games)
+So, as you can see, it has optionals parameters already setted like `page` and `pageSize` and another `Map<String, String> moreParams` parameter which you can use to add more parameters to the API request.
 
-For example, if you want to search for cyberpunk game in the catalog you can use moreParams like this:
+You can see which parameters and how to use them here [https://api.rawg.io/docs/#tag/games](https://api.rawg.io/docs/#tag/games)
+
+But let see a simple use case:
+
+- if you want to search for "cyberpunk" game in the catalog you can use `moreParams` to add a search pattern like this:
 
 ```
 rawg.getGames(moreParams: {'search': 'cyberpunk'}, completion: (error, nextUrl, games) {
-	//
+	print(error ?? 'NO ERROR');
+	print(nextUrl ?? 'NO NEXT URL');
+	print(games ?? 'NO DATA');
 });
 ```
-You can also ordering results by adding the parameter to the request
+
+This will return a list of games that match with the search criteria. This is the corresponding url [https://api.rawg.io/api/games?search=cyberpunk](https://api.rawg.io/api/games?search=cyberpunk)
+
+You can also sort results by adding the key `ordering` to the `moreParams` map like this:
 
 ```
-moreParams: {'ordering': '${OrderingOptions.RATING.value}'},
-```
-Or in reverse order (add - (minus) to the order string)
-
-```
-moreParams: {'ordering': '-${OrderingOptions.RATING.value}'},
+var params = {
+      'search': 'cyberpunk',
+      'ordering': OrderingOptions.RATING.value
+};
+rawg.getGames(moreParams: params, completion: (error, nextUrl, games) {
+      print(error ?? 'NO ERROR');
+      print(nextUrl ?? 'NO NEXT URL');
+      print(games ?? 'NO DATA');
+});
 ```
 
 I facilitated an enum you can use to ordering purposes
@@ -90,6 +109,23 @@ extension OrderingOptionsExtension on OrderingOptions {
         return "created";
       case OrderingOptions.RATING:
         return "rating";
+      default:
+        return null;
+    }
+  }
+
+  String get reverse {
+    switch (this) {
+      case OrderingOptions.NAME:
+        return "-name";
+      case OrderingOptions.RELEASED:
+        return "-released";
+      case OrderingOptions.ADDED:
+        return "-added";
+      case OrderingOptions.CREATED:
+        return "-created";
+      case OrderingOptions.RATING:
+        return "-rating";
       default:
         return null;
     }
