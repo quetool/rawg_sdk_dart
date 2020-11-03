@@ -17,6 +17,8 @@ For now you can add to your pubspec dependencies the following repository like t
 _I will be adding this package to pub.dev directory soon_ 🤞
 
 ### How to use
+_I've made a [small sample app](https://github.com/quetool/games_store) to show how to use it._
+
 You need to create a RawgApiClient() instance, which is a singleton and then call it functions. You can add an ApiKey if you want, you can check how to get an ApiKey here [https://rawg.io/apidocs](https://rawg.io/apidocs)
 
 ```
