@@ -1,5 +1,3 @@
-import 'dart:math';
-
 class Game {
   Game({
     this.slug,
@@ -28,6 +26,7 @@ class Game {
     this.reviewsCount,
     this.saturatedColor,
     this.dominantColor,
+    this.description,
   });
 
   Game.fromJson(Map<String, dynamic> json) {
@@ -58,7 +57,7 @@ class Game {
             .add(ShortScreenshots.fromJson(v as Map<String, dynamic>));
       });
     }
-    price = Random().nextInt(10000);
+    description = json['description'] as String;
   }
 
   String slug;
@@ -87,6 +86,7 @@ class Game {
   int reviewsCount;
   String saturatedColor;
   String dominantColor;
+  String description;
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
@@ -104,6 +104,7 @@ class Game {
     if (genres != null) {
       data['genres'] = genres.map((v) => v.toJson()).toList();
     }
+    data['description'] = description;
     return data;
   }
 }
