@@ -1,8 +1,7 @@
 name: rawg_sdk_dart
 description: A Flutter package to interact with RAWG API.
 version: 0.0.1
-author: "Alfreedom (@quetool)"
-homepage: "https://github.com/quetool"
+homepage: "https://github.com/quetool/rawg_sdk_dart"
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
