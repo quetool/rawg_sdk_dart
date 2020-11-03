@@ -1,6 +1,6 @@
 name: rawg_sdk_dart
-description: A Flutter package to interact with RAWG API.
-version: 0.0.1
+description: A Flutter package to interact with RAWG API written in pure Dart. Both for iOS and Android. It will help you to request games from the RAWG catalog.
+version: 0.0.2
 homepage: "https://github.com/quetool/rawg_sdk_dart"
 
 environment:
