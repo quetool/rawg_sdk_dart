@@ -26,7 +26,7 @@ class Game {
     this.reviewsCount,
     this.saturatedColor,
     this.dominantColor,
-    this.description,
+    this.descriptionRaw,
   });
 
   Game.fromJson(Map<String, dynamic> json) {
@@ -57,7 +57,7 @@ class Game {
             .add(ShortScreenshots.fromJson(v as Map<String, dynamic>));
       });
     }
-    description = json['description'] as String;
+    descriptionRaw = json['description_raw'] as String;
   }
 
   String slug;
@@ -86,7 +86,7 @@ class Game {
   int reviewsCount;
   String saturatedColor;
   String dominantColor;
-  String description;
+  String descriptionRaw;
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
@@ -104,7 +104,7 @@ class Game {
     if (genres != null) {
       data['genres'] = genres.map((v) => v.toJson()).toList();
     }
-    data['description'] = description;
+    data['description_raw'] = descriptionRaw;
     return data;
   }
 }
