@@ -17,14 +17,14 @@ class RawgApiClient {
 
   String _apiKey;
   String _rootApi;
-  String _creatorRoles;
-  String _creators;
-  String _developers;
+  // String _creatorRoles;
+  // String _creators;
+  // String _developers;
   String _games;
   String _genres;
   String _platforms;
-  String _platformsListsParents;
-  String _publishers;
+  // String _platformsListsParents;
+  // String _publishers;
   String _stores;
   String _tags;
 
@@ -32,14 +32,14 @@ class RawgApiClient {
 
   void _init() {
     _rootApi = 'api.rawg.io';
-    _creatorRoles = '/creator-roles';
-    _creators = '/creators';
-    _developers = '/developers';
+    // _creatorRoles = '/creator-roles';
+    // _creators = '/creators';
+    // _developers = '/developers';
     _games = '/games';
     _genres = '/genres';
     _platforms = '/platforms';
-    _platformsListsParents = '/platforms/lists/parents';
-    _publishers = '/publishers';
+    // _platformsListsParents = '/platforms/lists/parents';
+    // _publishers = '/publishers';
     _stores = '/stores';
     _tags = '/tags';
     _client = http.Client();
@@ -55,9 +55,10 @@ class RawgApiClient {
     Function(String error, String nextUrl, dynamic object) completion,
   ) {
     _client.get(url).then((response) {
+      var responseString = utf8.decode(response.bodyBytes);
       if (response.statusCode == 200) {
         try {
-          var jsonObject = json.decode(response.body) as Map<String, dynamic>;
+          var jsonObject = json.decode(responseString) as Map<String, dynamic>;
           if (jsonObject.containsKey('results')) {
             var objectsList = (jsonObject['results'] as List<dynamic>);
             var nextUrl = jsonObject['next'] as String;
@@ -111,9 +112,10 @@ class RawgApiClient {
     var uri = Uri.https(_rootApi, '/api$_games', params);
     print(uri.toString());
     _client.get(uri).then((response) {
+      var responseString = utf8.decode(response.bodyBytes);
       if (response.statusCode == 200) {
         try {
-          var jsonObject = json.decode(response.body) as Map<String, dynamic>;
+          var jsonObject = json.decode(responseString) as Map<String, dynamic>;
           var gamesList = (jsonObject['results'] as List)
               .map(
                   (dynamic game) => Game.fromJson(game as Map<String, dynamic>))
@@ -140,9 +142,10 @@ class RawgApiClient {
     var uri = Uri.https(_rootApi, '/api$_games/$gameID', params);
     print(uri.toString());
     _client.get(uri).then((response) {
+      var responseString = utf8.decode(response.bodyBytes);
       if (response.statusCode == 200) {
         try {
-          var jsonObject = json.decode(response.body) as Map<String, dynamic>;
+          var jsonObject = json.decode(responseString) as Map<String, dynamic>;
           var game = Game.fromJson(jsonObject);
           completion(null, game);
         } catch (e) {
@@ -167,9 +170,10 @@ class RawgApiClient {
         '/api$_games/$slug/${GamesEndpoints.SCREEN_SHOTS.value}', params);
     print(uri.toString());
     _client.get(uri).then((response) {
+      var responseString = utf8.decode(response.bodyBytes);
       if (response.statusCode == 200) {
         try {
-          var jsonObject = json.decode(response.body) as Map<String, dynamic>;
+          var jsonObject = json.decode(responseString) as Map<String, dynamic>;
           var screenshotsList = (jsonObject['results'] as List)
               .map((dynamic screenshot) =>
                   Screenshot.fromJson(screenshot as Map<String, dynamic>))
@@ -204,9 +208,10 @@ class RawgApiClient {
     var uri = Uri.https(_rootApi, '/api$_platforms', params);
     print(uri.toString());
     _client.get(uri).then((response) {
+      var responseString = utf8.decode(response.bodyBytes);
       if (response.statusCode == 200) {
         try {
-          var jsonObject = json.decode(response.body) as Map<String, dynamic>;
+          var jsonObject = json.decode(responseString) as Map<String, dynamic>;
           var platformList = (jsonObject['results'] as List)
               .map((dynamic platform) =>
                   Platform.fromJson(platform as Map<String, dynamic>))
@@ -240,9 +245,10 @@ class RawgApiClient {
     var uri = Uri.https(_rootApi, '/api$_genres', params);
     print(uri.toString());
     _client.get(uri).then((response) {
+      var responseString = utf8.decode(response.bodyBytes);
       if (response.statusCode == 200) {
         try {
-          var jsonObject = json.decode(response.body) as Map<String, dynamic>;
+          var jsonObject = json.decode(responseString) as Map<String, dynamic>;
           var genresList = (jsonObject['results'] as List)
               .map((dynamic genre) =>
                   Genres.fromJson(genre as Map<String, dynamic>))
@@ -276,9 +282,10 @@ class RawgApiClient {
     var uri = Uri.https(_rootApi, '/api$_stores', params);
     print(uri.toString());
     _client.get(uri).then((response) {
+      var responseString = utf8.decode(response.bodyBytes);
       if (response.statusCode == 200) {
         try {
-          var jsonObject = json.decode(response.body) as Map<String, dynamic>;
+          var jsonObject = json.decode(responseString) as Map<String, dynamic>;
           var storesList = (jsonObject['results'] as List)
               .map((dynamic store) =>
                   Store.fromJson(store as Map<String, dynamic>))
@@ -310,9 +317,10 @@ class RawgApiClient {
     var uri = Uri.https(_rootApi, '/api$_tags', params);
     print(uri.toString());
     _client.get(uri).then((response) {
+      var responseString = utf8.decode(response.bodyBytes);
       if (response.statusCode == 200) {
         try {
-          var jsonObject = json.decode(response.body) as Map<String, dynamic>;
+          var jsonObject = json.decode(responseString) as Map<String, dynamic>;
           var tagsList = (jsonObject['results'] as List)
               .map((dynamic tag) => Tags.fromJson(tag as Map<String, dynamic>))
               .toList();
